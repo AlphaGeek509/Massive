@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -157,6 +158,17 @@ namespace Massive.Tests.Oracle
 			Assert.AreEqual(1, depts.Delete(savedDeps[0].DEPTNO));
 			Assert.AreEqual(1, depts.Delete(savedDeps[1].DEPTNO));
 		}
+
+        [Test]
+        public void toDataTable_Test()
+        {
+            var depts = new Department();
+            var allRows = depts.All().ToList();
+            var dt = new DataTable();
+
+            dt = allRows.ToDataTable();
+            Assert.Greater(dt.Rows.Count, 1);
+        }
 
 
 		[TestFixtureTearDown]

@@ -29,6 +29,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
@@ -135,6 +136,30 @@ namespace Massive
 		{
 			return (IDictionary<string, object>)thingy.ToExpando();
 		}
+
+
+        /// <summary>
+        /// Extension method to convert dynamic data to a DataTable. Useful for databinding.
+        /// </summary>
+        /// <param name="items"></param>
+        /// <returns>A DataTable with the copied dynamic data.</returns>
+        /// <remarks>Credit givent ot Brian Vallelunga http://stackoverflow.com/a/6298704/5262210 </remarks>
+        public static DataTable ToDataTable(this IEnumerable<dynamic> items)
+        {
+            var data = items.ToArray();
+            if (data.Count() == 0) return null;
+
+            var dt = new DataTable();
+            foreach (var key in ((IDictionary<string, object>)data[0]).Keys)
+            {
+                dt.Columns.Add(key);
+            }
+            foreach (var d in data)
+            {
+                dt.Rows.Add(((IDictionary<string, object>)d).Values.ToArray());
+            }
+            return dt;
+        }
 	}
 
 
